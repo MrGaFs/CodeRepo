@@ -1,6 +1,6 @@
 # Code repository
 
-#code template 
+# code template 
 
 ```c++
 #include<bits/stdc++.h>
