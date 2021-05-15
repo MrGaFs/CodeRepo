@@ -52,9 +52,11 @@ struct DSU
     int par[N], sz[N], set[N], pos[N], tail[N] ,nxt[N], cnt;
     DSU(int n)
     {
-        iota(par, par+n, 0);
-        iota(set, set+n, 0);
-        iota(pos, pos+n, 0);
+        iota(par, par + n, 0);
+        iota(set, set + n, 0);
+        iota(pos, pos + n, 0);
+        iota(tail, tail + n, 0);
+        iota(nxt, nxt + n, 0);
         fill(sz, sz+n, 1);
         cnt = n;
     }
