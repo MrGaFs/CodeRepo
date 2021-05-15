@@ -1,6 +1,6 @@
 # Code repository
 
-# code template 
+## code template 
 
 ```c++
 #include<bits/stdc++.h>
@@ -50,22 +50,23 @@ The idea of dsu is a fast way to combine sets together
 struct DSU
 {
     int par[N], sz[N], set[N], pos[N], tail[N] ,nxt[N], cnt;
+    //O(n)
     DSU(int n)
     {
-        iota(par, par + n, 0);
-        iota(set, set + n, 0);
-        iota(pos, pos + n, 0);
-        iota(tail, tail + n, 0);
-        iota(nxt, nxt + n, 0);
+        iota(par, par+n, 0);
+        iota(set, set+n, 0);
+        iota(pos, pos+n, 0);
         fill(sz, sz+n, 1);
         cnt = n;
     }
+    // O(ackermann)
     int find(int n)
     {
         if(n == par[n])
         return n ;
         return par[n] = find(par[n]);
     }
+    // O(ackermann)
     bool merge(int u, int v)
     {
     	u = find(u);
@@ -83,6 +84,7 @@ struct DSU
         t = tail[v];
     	return true;
     }
+    // O(n)
     string toString()
     {
         stringstream ss;
@@ -95,6 +97,48 @@ struct DSU
         ss << ",]"[i + 1 == cnt];
         }
         return ss.str();
+    }
+};
+```
+### BIT (binary indexed tree) => Fenwick Tree
+
+the idea of **BIT** is that is to make a dynamic prefix sum
+#### Normal BIT
+> This is normal bit that only capable off update single element in log(n)
+```c++
+const int N = 1 << 18 ;
+struct BIT
+{
+        int tree[N] ;
+    void init()
+    {
+        memset(tree , 0 , sizeof tree);
+    }
+    //O(log(n))
+    void add(int pos, int val)
+    {
+        for(++pos ; pos <= N ; pos += (pos & (-pos)))
+        tree[pos - 1] += val ;
+    }
+    //O(log(n))
+    int get(int pos)
+    {
+        int tmp = 0;
+        for(++pos ; pos ; pos -= (pos &(-pos)))
+        tmp += tree[pos - 1];
+        return tmp;
+    }
+    // this if tree is Sorted
+    //O(log(n))
+    int find(int t)
+    {
+        int st = 0;
+        for(int sz = N >> 1;sz ; sz >>= 1)
+        {
+            if(tree[st + sz -1] < t)
+                t -= tree[(st += sz) -1];
+        }
+        return st ;
     }
 };
 ```
