@@ -143,3 +143,36 @@ struct BIT
 };
 ```
 
+#### update ranges BIT
+
+> this is ranges update BIT
+
+```c++
+struct bitRange
+{
+    int m[N], c[N];
+    void add(int pos, int mVal, int cVal)
+    {
+        for(++pos; pos <= N;pos += (pos & (-pos)))
+        {
+            m[pos - 1] += mVal;
+            c[pos - 1] += cVal;
+        }
+    }
+    int get(int pos)
+    {
+        int ret = 0 , x = pos;
+        for(++ pos ; pos ; pos -= (pos & (-pos)))
+        {
+            ret += m[pos - 1] * x + c[pos - 1];
+        }
+        return ret ;
+    }
+    void addRange(int st, int en, int val)
+    {
+        add(st, val, val - val * st);
+        add(en + 1, - val , val * en);
+    }
+};
+```
+
