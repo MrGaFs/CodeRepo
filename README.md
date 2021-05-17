@@ -176,3 +176,79 @@ struct bitRange
 };
 ```
 
+## Range Query DS
+
+> Use according to this table
+
+|complexity|Sparse table    |Sqrt Decomp|Segment tree|
+|---------|-----------------|-----------|------------|
+|Time    |                  |     | |
+|Space    | O(n * log(n)) |     | |
+
+
+### Sparse Table
+
+it's one of way's to make a range Query
+
+```c++
+const int N = (1 << 17) , LG = 17;
+int sp[N][LG], lg[N], arr[N], n;
+void pre()
+{
+    lg[0] = -1;
+    for(int i = 0 ; i < N - 1; ++i)
+    {
+        sp[0][i] = i;
+        lg[i + 1] = lg[i] + !( i & (i + 1));
+    }
+}
+
+void buildSP()
+{
+    static int __=(pre(), 0);
+    for(int j = 1 ; (1 << j) <= n; ++j)
+    {
+        for(int i = 0 ; i + (1 << j) <= n ; ++i)
+        {
+            int a = sp[j - 1][i],
+            b = sp[j - 1][i + (1 << (j - 1))];
+            sp[j][i] = arr[a] < arr[b] ? a:b;
+        }
+    }
+}
+int getMnInd(int st, int en)
+{
+    int sz = en - st + 1;
+    int l = lg[sz];
+    int a = sp[l][st],
+    b = sp[l][en - (1<<l) + 1];
+    return arr[a] < arr[b] ? a : b;
+}
+```
+
+### Sqrt Decomposition
+
+Another way to make range query but support updating
+
+```c++
+const int N = 1e5 + 5, SQ = 317;
+int arr[N], pre[SQ], n, sq;
+
+int RMQ(int st, int en)
+{
+    int stB = st / sq, enB = en / sq;
+    if(stB == enB)
+        return *min(arr + st, arr + en + 1);
+    int ret = min(*min_element(arr + st , arr + (stB + 1)* sq),
+    *min_element(arr + enB * sq, arr + en + 1));
+    if(stB + 1 != enB)
+        ret = min(ret , *min_element(pre + stB + 1, pre + enB));
+    return ret;
+}
+void update(int pos, int val)
+{
+    arr[pos] = val;
+    pre[pos / sq] = min(pre[pos / sq], val);
+}
+```
+
